@@ -1,0 +1,46 @@
+// Variables
+$padding-layout: 5px;
+$nav-main-height: 60px;
+$border-color: #e0e0e0;
+
+// Header
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-inline: $padding-layout;
+  }
+}
+
+// Header content (fixed top bar)
+.header-content {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  min-height: 140px;
+  background-color: #fff;
+  border-bottom: 1px solid $border-color;
+}
+
+// Main content
+.main-content {
+  margin: 20px 0 0 0;
+  padding-top: 100px;
+}
+
+// Responsive adjustments
+@media (max-width: 950px) {
+  .header-content {
+    min-height: 50px;
+  }
+
+  .main-content {
+    padding-top: 70px;
+  }
+}
