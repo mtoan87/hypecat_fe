@@ -2,8 +2,7 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: `http://hypecat.runasp.net/api/`,
-   //baseURL: `https://localhost:7200/api`,
+  baseURL: "/api/",
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Methods": "*",
@@ -41,12 +40,11 @@ axiosClient.interceptors.response.use(
 
         try {
           const res = await axios.post(
-            "/auth/renewtoken",
+            "/api/auth/renewtoken",
             {
               refreshToken: userData.tokenModel.refreshToken,
               accessToken: userData.tokenModel.accessToken,
             },
-            { baseURL: "https://hpty.vinhuser.one/api" }
           );
 
           const newToken = res?.data?.accessToken;
