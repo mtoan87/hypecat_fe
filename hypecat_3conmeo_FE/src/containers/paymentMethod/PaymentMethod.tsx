@@ -119,7 +119,7 @@ const PaymentMethods: React.FC = () => {
     //     features: ["Đơn giản, tiện lợi", "Không cần nhập thông tin", "An toàn"]
     // },
     {
-      id: "cod",
+      id: "COD",
       name: "Thanh toán khi nhận hàng (COD)",
       description: "Trả tiền mặt khi nhận được hàng",
       icon: LocalAtm,
@@ -157,7 +157,7 @@ const PaymentMethods: React.FC = () => {
       const params = {
         addressId,
         paymentMethod: selectedPaymentId,
-        note,
+        ...(note.trim() ? { note: note.trim() } : {}),
       };
 
       await orderApi.CreateOrderFromCart(params);

@@ -231,9 +231,11 @@ const CustomerProductDetail: React.FC = () => {
 
   const allImages = [
     product.cover,
-    ...product.images.map((img) => img.urlPath),
+    ...(product.images ?? []).map((img) => img.urlPath),
   ];
-  const currentPrice = product.batchDetails[0]?.sellingPrice || 0;
+  const currentBatch = product.batchDetails?.find(Boolean);
+  const currentPrice = currentBatch?.sellingPrice || 0;
+  const remainingQuantity = currentBatch?.remainingQuantity || 0;
   const totalPrice = currentPrice * quantity;
 
   return (
@@ -429,7 +431,7 @@ const CustomerProductDetail: React.FC = () => {
                         Số lượng
                       </Typography>
                       <Typography variant="h6" sx={{ fontWeight: 400, mb: 2 }}>
-                        hiện có {product.batchDetails[0].remainingQuantity}
+                        hiện có {remainingQuantity}
                       </Typography>
                     </Stack>
 
@@ -474,8 +476,7 @@ const CustomerProductDetail: React.FC = () => {
                             },
                           }}
                           onChange={(e) => {
-                            const max =
-                              product.batchDetails[0].remainingQuantity;
+                            const max = remainingQuantity;
                             let value: number = parseInt(e.target.value) || 1;
                             if (value > max) value = max;
                             setQuantity(Math.max(1, value));
@@ -484,7 +485,7 @@ const CustomerProductDetail: React.FC = () => {
                             input: {
                               inputProps: {
                                 min: 1,
-                                max: product.batchDetails[0].remainingQuantity,
+                                max: remainingQuantity,
                                 style: { textAlign: "center" },
                               },
                             },
@@ -497,8 +498,7 @@ const CustomerProductDetail: React.FC = () => {
                             "&:hover": { backgroundColor: "primary.50" },
                           }}
                           disabled={
-                            quantity >=
-                            product.batchDetails[0].remainingQuantity
+                            quantity >= remainingQuantity
                           }
                         >
                           <Add />
@@ -541,6 +541,7 @@ const CustomerProductDetail: React.FC = () => {
                           size="large"
                           startIcon={<ShoppingCart />}
                           onClick={handleAddToCart}
+                          disabled={remainingQuantity <= 0}
                           disabled={product.status !== "Available"}
                           sx={{
                             flex: 1,
