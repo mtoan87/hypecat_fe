@@ -30,9 +30,9 @@ export default function MenuActionTableBatchDetail({
       icon: <InfoIcon sx={{ mr: 1 }} color="info" />,
       action: () => {
         navigate(
-          config.adminRoutes.manageBatchDetail.replace(
+          config.adminRoutes.ManageProductDetail.replace(
             ":id",
-            batchData.batchId.toString()
+            batchData.productId.toString()
           )
         );
       },

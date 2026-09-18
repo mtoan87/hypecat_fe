@@ -6,7 +6,7 @@ export const usePriceFormatter = () => {
       typeof value === "string"
         ? parseInt(value.replace(/\D/g, ""), 10) || 0
         : value;
-    return numValue.toLocaleString("vi-VN");
+    return numValue.toLocaleString("en-US");
   }, []);
 
   const parsePrice = useCallback((value: string): number => {

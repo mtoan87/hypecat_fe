@@ -1,5 +1,5 @@
 import { TextField, InputAdornment } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePriceFormatter } from "../../hooks/useCustomCommasNumber";
 
 interface PriceInputFieldProps {
@@ -19,9 +19,12 @@ const PriceInputField = ({
 }: PriceInputFieldProps) => {
   const { formatPrice, parsePrice } = usePriceFormatter();
   const [rawInput, setRawInput] = useState<string>(formatPrice(value));
+  const isFocused = useRef(false);
 
   useEffect(() => {
-    setRawInput(formatPrice(value));
+    if (!isFocused.current) {
+      setRawInput(formatPrice(value));
+    }
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +35,7 @@ const PriceInputField = ({
   };
 
   const handleBlur = () => {
+    isFocused.current = false;
     setRawInput(formatPrice(parsePrice(rawInput)));
   };
 
@@ -41,6 +45,9 @@ const PriceInputField = ({
       size="small"
       value={rawInput}
       onChange={handleChange}
+      onFocus={() => {
+        isFocused.current = true;
+      }}
       onBlur={handleBlur}
       error={error}
       helperText={helperText}
