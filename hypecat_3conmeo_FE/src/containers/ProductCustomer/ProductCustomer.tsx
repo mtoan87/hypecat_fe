@@ -77,14 +77,16 @@ const ProductCustomer: React.FC = () => {
   const postsPerPage = 8;
   const [page, setPage] = useState<number>(1);
   const productRef = useRef<HTMLElement>(null);
+  const requestIdRef = useRef(0);
 
   const updateFilter = (key: string, value: string) => {
     if (key === "SearchTerm") {
-      setSearchTerm(value); // Update the input field immediately
-      searchParams.set("SearchTerm", value);
-      setSearchParams(searchParams);
+      setSearchTerm(value);
+      setActiveSearchTerm(value);
+      setPage(1);
     } else {
       setSearchTerm("");
+      setActiveSearchTerm("");
       setFilters((prev) => ({ ...prev, [key]: value }));
 
       const data = categories.filter((cate) => {
@@ -142,6 +144,7 @@ const ProductCustomer: React.FC = () => {
     searchTerm: string,
     otherFilters: any
   ) => {
+    const requestId = ++requestIdRef.current;
     try {
       const params = {
         pageIndex,
@@ -152,13 +155,17 @@ const ProductCustomer: React.FC = () => {
       };
       setLoading(true);
       const response = await productApi.getProductCustomerList(params);
+      if (requestId !== requestIdRef.current) return;
       setProducts(response.items);
       setTotalItems(response.totalItemsCount);
     } catch (error) {
-      console.error("Error fetching products:", error);
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        console.error("Error fetching products:", error);
+      }
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -218,17 +225,7 @@ const ProductCustomer: React.FC = () => {
       ref={productRef}
     >
       <Container maxWidth="xl" sx={{ py: 4 }}>
-        {loading ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            minHeight="50vh"
-          >
-            <CircularProgress size={60} />
-          </Box>
-        ) : (
-          <Grid container spacing={3}>
+        <Grid container spacing={3}>
             {/* Sidebar */}
             <Grid size={{ xs: 12, md: 3 }}>
               <Paper
@@ -330,6 +327,7 @@ const ProductCustomer: React.FC = () => {
 
             {/* Main Content */}
             <Grid size={{ xs: 12, md: 9 }}>
+              <Box sx={{ position: "relative", minHeight: 300 }}>
               <Grid container spacing={3}>
                 {products.map((product) => (
                   <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={product.id}>
@@ -464,9 +462,25 @@ const ProductCustomer: React.FC = () => {
                   </Typography>
                 </Paper>
               )}
+              {loading && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    inset: 0,
+                    zIndex: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 300,
+                    backgroundColor: "rgba(255, 255, 255, 0.65)",
+                  }}
+                >
+                  <CircularProgress size={48} />
+                </Box>
+              )}
+              </Box>
             </Grid>
-          </Grid>
-        )}
+        </Grid>
       </Container>
     </Box>
   );
