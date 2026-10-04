@@ -541,8 +541,10 @@ const CustomerProductDetail: React.FC = () => {
                           size="large"
                           startIcon={<ShoppingCart />}
                           onClick={handleAddToCart}
-                          disabled={remainingQuantity <= 0}
-                          disabled={product.status !== "Available"}
+                          disabled={
+                            remainingQuantity <= 0 ||
+                            product.status !== "Available"
+                          }
                           sx={{
                             flex: 1,
                             py: 1.5,
