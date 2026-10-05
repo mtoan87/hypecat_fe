@@ -6,7 +6,9 @@ async function uploadToCloudinary(
   resourceType: "image" | "video"
 ): Promise<string> {
   if (!cloudName || !uploadPreset) {
-    throw new Error("Thiếu cấu hình Cloudinary trong file .env.local.");
+    throw new Error(
+      "Thiếu cấu hình Cloudinary. Hãy đặt VITE_CLOUDINARY_CLOUD_NAME và VITE_CLOUDINARY_UPLOAD_PRESET trong môi trường build rồi build lại ứng dụng."
+    );
   }
 
   const maxSizeInBytes = (resourceType === "image" ? 5 : 50) * 1024 * 1024;
